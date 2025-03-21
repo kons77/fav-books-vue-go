@@ -16,7 +16,7 @@
       Header,
       Body, 
       Footer,
-    }
+    },
   }
 </script>
 
