@@ -8,10 +8,14 @@ import (
 	"time"
 )
 
+// config is the type for all application configuration
 type config struct {
 	port int
 }
 
+// application is the type for all data we want to share with the
+// various parts of our application. We will share this information in most
+// cases by using this type as the receiver for functions
 type application struct {
 	config   config
 	infoLog  *log.Logger
