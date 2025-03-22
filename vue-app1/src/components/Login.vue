@@ -4,9 +4,10 @@
       <div class="col">
         <h1 class="mt-5">Login</h1>
         <hr>
-        <form-tag>
+        <form-tag @myevent="submitHandelr">
 
           <text-input
+            v-model="email"
             label="Email"
             name="email"
             type="email"
@@ -14,6 +15,7 @@
           </text-input>
 
           <text-input
+            v-model="password"
             label="Password"
             name="password"
             type="password"
@@ -22,7 +24,7 @@
 
           <hr>
           <input type="submit" class="btn btn-primary" value="Login">
-          
+
         </form-tag>
       </div>
     </div>
@@ -38,7 +40,18 @@ export default{
   components: {
     FormTag,
     TextInput,
-  }, 
+  },
+  data()  {
+    return {
+      email: "",
+      password: "",
+    }
+  }
+  methods: {
+    submitHandelr() {
+      console.log("submitHandelr called - success");
+    }
+  },
   mounted() {
       (function () {
         'use strict'
