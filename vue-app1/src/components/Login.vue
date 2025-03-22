@@ -4,7 +4,7 @@
       <div class="col">
         <h1 class="mt-5">Login</h1>
         <hr>
-          <form method="post" action="/login" class="needs-validation" novalidate>
+        <form-tag>
 
           <text-input
             label="Email"
@@ -22,22 +22,24 @@
 
           <hr>
           <input type="submit" class="btn btn-primary" value="Login">
-        </form>
+          
+        </form-tag>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import TextInput from './forms/TextInput.vue';
+import FormTag from './forms/FormTag.vue'
+import TextInput from './forms/TextInput.vue'
 
 export default{
   name: 'login', 
   components: {
+    FormTag,
     TextInput,
   }, 
   mounted() {
-      // Bootstrap validation for disabling form submissions if there are invalid fields
       (function () {
         'use strict'
 
