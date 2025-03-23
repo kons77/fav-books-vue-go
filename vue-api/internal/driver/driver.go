@@ -31,22 +31,22 @@ func ConnectPosgres(dsn string) (*DB, error) {
 	d.SetMaxIdleConns(maxIdleDbConn)
 	d.SetConnMaxLifetime(maxDbLifetime)
 
-	err = testDB(err, d)
+	err = testDB(d)
 	if err != nil {
 		return nil, err
 	}
 
 	dbConn.SQL = d
 
-	return dbConn, err
+	return dbConn, nil
 }
 
-func testDB(err error, d *sql.DB) error {
-	err = d.Ping()
+func testDB(d *sql.DB) error {
+	err := d.Ping()
 	if err != nil {
 		fmt.Println("Error!", err)
-	} else {
-		fmt.Println("*** Ping database successfully! ***")
+		return err
 	}
-	return err
+
+	return nil
 }
