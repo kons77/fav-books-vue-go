@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"vue-api/internal/driver"
 )
 
 // config is the type for all application configuration
@@ -20,6 +21,7 @@ type application struct {
 	config   config
 	infoLog  *log.Logger
 	errorLog *log.Logger
+	db       *driver.DB
 }
 
 // main is the main entry point four our application
@@ -30,13 +32,20 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO \t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stdout, "ERROR \t", log.Ldate|log.Ltime|log.Lshortfile)
 
+	dsn := "host=192.168.88.144 port=5437 user=postgres password=password dbname=vueapi sslmode=disable timezone=UTC connect_timeout=5"
+	db, err := driver.ConnectPosgres(dsn)
+	if err != nil {
+		log.Fatalln("Cannot connect to db")
+	}
+
 	app := &application{
 		config:   cfg,
 		infoLog:  infoLog,
 		errorLog: errorLog,
+		db:       db,
 	}
 
-	err := app.serve()
+	err = app.serve()
 	if err != nil {
 		log.Fatal(err)
 	}
