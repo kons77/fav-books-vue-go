@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"vue-api/internal/data"
 	"vue-api/internal/driver"
 )
 
@@ -21,7 +22,8 @@ type application struct {
 	config   config
 	infoLog  *log.Logger
 	errorLog *log.Logger
-	db       *driver.DB
+	//db       *driver.DB   use models instead
+	models data.Models
 }
 
 // main is the main entry point four our application
@@ -43,7 +45,7 @@ func main() {
 		config:   cfg,
 		infoLog:  infoLog,
 		errorLog: errorLog,
-		db:       db,
+		models:   data.New(db.SQL),
 	}
 
 	err = app.serve()
