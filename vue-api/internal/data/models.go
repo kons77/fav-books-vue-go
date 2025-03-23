@@ -35,6 +35,17 @@ type User struct {
 	Token     Token     `json:"token"`
 }
 
+type Token struct {
+	ID        int       `json:"id"`
+	UserID    int       `json:"user_id"`
+	Email     string    `json:"email"`
+	Token     string    `json:"token"`
+	TokenHash []byte    `json:"-"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Expiry    time.Time `json:"expiry"`
+}
+
 func (u *User) GetAll() ([]*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
@@ -68,15 +79,4 @@ func (u *User) GetAll() ([]*User, error) {
 	}
 
 	return users, nil
-}
-
-type Token struct {
-	ID        int       `json:"id"`
-	UserID    int       `json:"user_id"`
-	Email     string    `json:"email"`
-	Token     string    `json:"token"`
-	TokenHash []byte    `json:"-"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Expiry    time.Time `json:"expiry"`
 }
