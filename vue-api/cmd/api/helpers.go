@@ -6,6 +6,8 @@ import (
 	"io"
 	"maps"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (app *application) readJSON(w http.ResponseWriter, r *http.Request, data any) error {
@@ -64,4 +66,20 @@ func (app *application) errorJSON(w http.ResponseWriter, err error, status ...in
 	payload.Message = err.Error()
 
 	app.writeJSON(w, statusCode, payload)
+}
+
+func (app *application) GenerateHashForPassword(pswd string) (string, error) {
+	// https://go.dev/play/p/8xBA82ib5uW  -  from here
+
+	// password := []byte(pswd)
+
+	// Hashing the password with a cost of 12
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(pswd), 12)
+	if err != nil {
+		panic(err)
+	}
+
+	//fmt.Println(string(hashedPassword))
+
+	return string(hashedPassword), nil
 }

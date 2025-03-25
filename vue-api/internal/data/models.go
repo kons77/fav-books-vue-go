@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 const dbTimeout = time.Second * 3
@@ -33,17 +35,6 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Token     Token     `json:"token"`
-}
-
-type Token struct {
-	ID        int       `json:"id"`
-	UserID    int       `json:"user_id"`
-	Email     string    `json:"email"`
-	Token     string    `json:"token"`
-	TokenHash []byte    `json:"-"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Expiry    time.Time `json:"expiry"`
 }
 
 func (u *User) GetAll() ([]*User, error) {
@@ -79,4 +70,131 @@ func (u *User) GetAll() ([]*User, error) {
 	}
 
 	return users, nil
+}
+
+// GetUserByEmail <- GetByEmail
+func (u *User) GetUserByEmail(email string) (*User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `select id, email, first_name, last_name, password, created_at, updated_at from users where email = $1`
+
+	var user User
+	row := db.QueryRowContext(ctx, query, email)
+
+	err := row.Scan(
+		&user.ID,
+		&user.Email,
+		&user.FirstName,
+		&user.LastName,
+		&user.Password,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+// GetUserByID <- GetOne
+func (u *User) GetUserByID(id int) (*User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `select id, email, first_name, last_name, password, created_at, updated_at from users where id = $1`
+
+	var user User
+	row := db.QueryRowContext(ctx, query, id)
+
+	err := row.Scan(
+		&user.ID,
+		&user.Email,
+		&user.FirstName,
+		&user.LastName,
+		&user.Password,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (u *User) UpdateUser() error {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	stmt := `update users set 
+		email = $1, first_name = $2, last_name =$3, updated_at = $4 
+		where id = $5 `
+
+	_, err := db.ExecContext(ctx, stmt,
+		u.Email, u.FirstName, u.LastName, time.Now(), u.ID,
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *User) DeleteUser() error {
+	// you might want to put id  as an integer instead instead of calling it this way.
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	stmt := `delete from users where id = $1`
+
+	_, err := db.ExecContext(ctx, stmt, u.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *User) InsertUser(user User) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 12)
+	if err != nil {
+		return 0, err
+	}
+
+	var newID int
+	stmt := `insert into users (email, first_name, last_name, password, created_at, updated_at)
+		values ($1, $2, $3, $4, $5, $6) returning id`
+
+	err = db.QueryRowContext(ctx, stmt,
+		user.Email,
+		user.FirstName,
+		user.LastName,
+		hashedPassword,
+		time.Now(),
+		time.Now(),
+	).Scan(&newID)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return newID, nil
+}
+
+type Token struct {
+	ID        int       `json:"id"`
+	UserID    int       `json:"user_id"`
+	Email     string    `json:"email"`
+	Token     string    `json:"token"`
+	TokenHash []byte    `json:"-"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Expiry    time.Time `json:"expiry"`
 }

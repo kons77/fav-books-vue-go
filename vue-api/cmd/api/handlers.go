@@ -41,3 +41,43 @@ func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+/*
+// AdminPostHashPassword generate hashed password from the string
+func (app *application) AdminPostHashPassword(w http.ResponseWriter, r *http.Request) {
+
+
+	form := forms.New(r.PostForm)
+	form.Required("password")
+
+	if !form.Valid() {
+		// send json response
+		resp := map[string]string{
+			"error": "Password cannot be empty!",
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
+
+	pswd := r.Form.Get("password")
+
+	hashedPswd, err := helpers.HashPassword(pswd)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	resp := map[string]string{
+		"HashedPswd": string(hashedPswd),
+	}
+
+	// send json response
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(resp) // writes directly to http.ResponseWriter: No need for intermediate variables.
+
+}
+
+*/
