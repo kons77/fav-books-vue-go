@@ -429,6 +429,9 @@ func (t *Token) DeleteByToken(plainText string) error {
 	return nil
 }
 
+// ValidToken makes certain that a given token is valid; in order to be valid,
+// the token must exist in the database, the associated user must exist in the database,
+// and the token must not have expired.
 func (t *Token) ValidToken(plainText string) (bool, error) {
 	token, err := t.GetByToken(plainText)
 	if err != nil {
