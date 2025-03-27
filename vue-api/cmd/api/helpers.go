@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"maps"
 	"net/http"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -61,9 +63,26 @@ func (app *application) errorJSON(w http.ResponseWriter, err error, status ...in
 		statusCode = status[0]
 	}
 
+	var customErr error
+	// www.postgresql.org/docs/14/errcodes-appendix.html
+
+	switch {
+	case strings.Contains(err.Error(), "SQLSTATE 23505"):
+		customErr = errors.New("duplicate value violates uniqe constraint")
+		statusCode = http.StatusForbidden
+	case strings.Contains(err.Error(), "SQLSTATE 22001"):
+		customErr = errors.New("the value you insert is too large")
+		statusCode = http.StatusForbidden
+	case strings.Contains(err.Error(), "SQLSTATE 23503"):
+		customErr = errors.New("foreign key violation")
+		statusCode = http.StatusForbidden
+	default:
+		customErr = err
+	}
+
 	var payload jsonResponse
 	payload.Error = true
-	payload.Message = err.Error()
+	payload.Message = customErr.Error()
 
 	app.writeJSON(w, statusCode, payload)
 }
@@ -71,15 +90,13 @@ func (app *application) errorJSON(w http.ResponseWriter, err error, status ...in
 func (app *application) GenerateHashForPassword(pswd string) (string, error) {
 	// https://go.dev/play/p/8xBA82ib5uW  -  from here
 
-	// password := []byte(pswd)
-
 	// Hashing the password with a cost of 12
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(pswd), 12)
 	if err != nil {
 		panic(err)
 	}
 
-	//fmt.Println(string(hashedPassword))
+	fmt.Println("Hashed password is: ", string(hashedPassword))
 
 	return string(hashedPassword), nil
 }
