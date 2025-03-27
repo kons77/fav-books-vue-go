@@ -8,8 +8,10 @@ import (
 type jsonResponse struct {
 	Error   bool   `json:"error"`
 	Message string `json:"message"`
-	Data    any    `json:"data"`
+	Data    any    `json:"data,omitempty"`
 }
+
+type envelope map[string]any
 
 // Login is the handler used to attempt to log a user into the api
 func (app *application) Login(w http.ResponseWriter, r *http.Request) {
