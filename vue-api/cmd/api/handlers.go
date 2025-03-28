@@ -18,7 +18,7 @@ type envelope map[string]any
 // Login is the handler used to attempt to log a user into the api
 func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 	type credentials struct {
-		UserName string `json:"username"` //email
+		UserName string `json:"email"` //email
 		Password string `json:"password"`
 	}
 
