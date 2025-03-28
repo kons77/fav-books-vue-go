@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"net/http"
+	"time"
 )
 
 // jsonResponse is the type used for generic JSON responses
@@ -16,7 +18,7 @@ type envelope map[string]any
 // Login is the handler used to attempt to log a user into the api
 func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 	type credentials struct {
-		UserName string `json:"username"`
+		UserName string `json:"username"` //email
 		Password string `json:"password"`
 	}
 
@@ -36,9 +38,40 @@ func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 	// TODO authenticate
 	app.infoLog.Println(creds.UserName, creds.Password)
 
+	// look up user by email
+	user, err := app.models.User.GetUserByEmail(creds.UserName)
+	if err != nil {
+		app.errorJSON(w, errors.New("invalid username/password"))
+		return
+	}
+
+	// validate the user's password
+	validPassword, err := user.PasswordMatches(creds.Password)
+	if err != nil || !validPassword {
+		app.errorJSON(w, errors.New("invalid username/password"))
+		return
+	}
+
+	// we have a valid use, generate a token
+	token, err := app.models.Token.GenerateToken(user.ID, 24*time.Hour)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	// save it to db
+	err = app.models.Token.InsertToken(*token, *user)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
 	//send back a response
-	payload.Error = false
-	payload.Message = "Signed in"
+	payload = jsonResponse{
+		Error:   false,
+		Message: "logged in in",
+		Data:    envelope{"token": token},
+	}
 
 	err = app.writeJSON(w, http.StatusOK, payload)
 	if err != nil {
