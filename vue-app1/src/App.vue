@@ -54,6 +54,8 @@
       }
     },
     mounted() {
+        
+      
         const payload = {
           foo: "bar",
         }
@@ -74,6 +76,7 @@
           console.log(response);
         })
       } 
+    
   }
 </script>
 
