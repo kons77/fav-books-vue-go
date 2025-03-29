@@ -27,8 +27,10 @@ func (app *application) routes() http.Handler {
 	}))
 	// mux.Use(NoSurf)
 
-	mux.Get("/users/login", app.Login)
 	mux.Post("/users/login", app.Login)
+	mux.Post("/users/logout", app.Logout)
+
+	// test routes-handlers below
 
 	mux.Get("/users/all", func(w http.ResponseWriter, r *http.Request) {
 		var users data.User

@@ -80,42 +80,32 @@ func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 
 }
 
-/*
-// AdminPostHashPassword generate hashed password from the string
-func (app *application) AdminPostHashPassword(w http.ResponseWriter, r *http.Request) {
-
-
-	form := forms.New(r.PostForm)
-	form.Required("password")
-
-	if !form.Valid() {
-		// send json response
-		resp := map[string]string{
-			"error": "Password cannot be empty!",
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(resp)
-		return
+func (app *application) Logout(w http.ResponseWriter, r *http.Request) {
+	var requestPayload struct {
+		Token string `json:"token"`
 	}
 
-	pswd := r.Form.Get("password")
-
-	hashedPswd, err := helpers.HashPassword(pswd)
+	err := app.readJSON(w, r, &requestPayload)
 	if err != nil {
-		helpers.ServerError(w, err)
+		app.errorJSON(w, err)
 		return
 	}
 
-	resp := map[string]string{
-		"HashedPswd": string(hashedPswd),
+	err = app.models.Token.DeleteByToken(requestPayload.Token)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
 	}
 
-	// send json response
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(resp) // writes directly to http.ResponseWriter: No need for intermediate variables.
+	payload := jsonResponse{
+		Error:   false,
+		Message: "logget out",
+	}
+
+	err = app.writeJSON(w, http.StatusOK, payload)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
 
 }
-
-*/
