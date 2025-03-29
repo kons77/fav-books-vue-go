@@ -41,7 +41,7 @@ export default {
         body: JSON.stringify(payload),
       }
 
-      fetch("http://localhost:8081/users/logout", requestOptions)
+      fetch(`${store.apiBaseURL}/users/logout`, requestOptions)
       .then(response => response.json())
       .then((response) => {
         if (response.error) {

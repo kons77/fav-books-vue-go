@@ -66,7 +66,7 @@ export default{
       }
 
       // show error if cannot connected to db 
-      fetch("http://localhost:8081/users/login", requestOptions)
+      fetch(`${store.apiBaseURL}/users/login`, requestOptions)
       .then(response => response.json())
       .then((response) => {
         if (response.error) {
