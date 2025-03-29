@@ -25,10 +25,25 @@ func (app *application) routes() http.Handler {
 		AllowCredentials: true,
 		MaxAge:           300,
 	}))
+
 	// mux.Use(NoSurf)
 
 	mux.Post("/users/login", app.Login)
 	mux.Post("/users/logout", app.Logout)
+
+	// admin routes
+	mux.Route("/admin", func(mux chi.Router) {
+		mux.Use(app.AuthTokenMiddleware)
+
+		mux.Post("/foo", func(w http.ResponseWriter, r *http.Request) {
+			payload := jsonResponse{
+				Error:   false,
+				Message: "bar",
+			}
+
+			app.writeJSON(w, http.StatusOK, payload)
+		})
+	})
 
 	// test routes-handlers below
 

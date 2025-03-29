@@ -52,8 +52,28 @@
           email: cookieData.user.email,
         }
       }
+    },
+    mounted() {
+        const payload = {
+          foo: "bar",
+        }
 
-    }
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        headers.append("Authorization", "Bearer " + store.token)
+
+        const requestOptions = {
+          method: "POST", 
+          body: JSON.stringify(payload),
+          headers: headers
+        }
+
+        fetch(`${store.apiBaseURL}/admin/foo`, requestOptions)
+        .then(response => response.json())
+        .then((response) => {
+          console.log(response);
+        })
+      } 
   }
 </script>
 
