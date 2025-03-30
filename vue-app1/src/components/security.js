@@ -3,7 +3,7 @@ import router from './../router/index.js'
 
 
 // this is going to be used only when I need to make a fetch request that requires authentication
-let Secturity = {
+let Security = {
     // make sure user is authenticated 
     requireToken: function() {
         if (store.token === '') {
@@ -26,4 +26,4 @@ let Secturity = {
     }
 }
 
-export default Secturity;
+export default Security;
