@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Security from '../components/security'
 import Body from './../components/Body.vue'
 import Login from './../components/Login.vue'
 import Books from './../components/Books.vue'
@@ -10,6 +11,7 @@ import User from './../components/UserEdit.vue'
 
 const routes = [
     {
+        // public
         path: '/',
         name: 'Home',
         component: Body,
@@ -25,29 +27,39 @@ const routes = [
         component: Books,        
     },
     {
+        // secured
         path: '/books/:bookName',
         name: 'Book',
-        component: Book,        
+        component: Book,   
+        beforeEnter: Security.requireToken,        
     },
     {
+        // secured
         path: '/admin/books/',
         name: 'Books admin',
-        component: BooksAdmin,        
+        component: BooksAdmin,   
+        beforeEnter: Security.requireToken,
     },
     {
+        // secured
         path: '/admin/books/:bookId',
         name: 'BookEdit',
-        component: BookEdit,        
+        component: BookEdit,  
+        beforeEnter: Security.requireToken,      
     },
     {
+        // secured
         path: '/admin/users',
         name: 'Users',
-        component: Users,        
+        component: Users,  
+        beforeEnter: Security.requireToken,      
     },
     {
+        // secured
         path: '/admin/users/:userId',
         name: 'User',
-        component: User,        
+        component: User,  
+        beforeEnter: Security.requireToken,      
     },
 ]
 
