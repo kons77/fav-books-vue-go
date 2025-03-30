@@ -54,30 +54,32 @@
       }
     },
     mounted() {
-        
-      
-        const payload = {
+      fooBarTest();    
+    }
+  }
+
+  function fooBarTest() {
+    const payload = {
           foo: "bar",
         }
 
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
-        headers.append("Authorization", "Bearer " + store.token)
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("Authorization", "Bearer " + store.token)
 
-        const requestOptions = {
-          method: "POST", 
-          body: JSON.stringify(payload),
-          headers: headers
-        }
+    const requestOptions = {
+      method: "POST", 
+      body: JSON.stringify(payload),
+      headers: headers
+    }
 
-        fetch(`${store.apiBaseURL}/admin/foo`, requestOptions)
-        .then(response => response.json())
-        .then((response) => {
-          console.log(response);
-        })
-      } 
-    
-  }
+    fetch(`${store.apiBaseURL}/admin/foo`, requestOptions)
+    .then(response => response.json())
+    .then((response) => {
+      console.log(response);
+    })
+  } 
+  
 </script>
 
 <style>

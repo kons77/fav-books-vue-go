@@ -4,7 +4,7 @@
       <div class="col">
         <h1 class="mt-5">Login</h1>
         <hr>
-        <form-tag @myevent="submitHandelr" name="myform" event="myevent">
+        <form-tag @myevent="submitHandler" name="myform" event="myevent">
 
           <text-input
             v-model="email"
@@ -52,7 +52,7 @@ export default{
     }
   },
   methods: {
-    submitHandelr() {
+    submitHandler() {
       console.log("submitHandelr called - success");
 
       const payload = {
