@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Security from '../components/security'
+import Security from './../components/security'
 import Body from './../components/Body.vue'
 import Login from './../components/Login.vue'
 import Books from './../components/Books.vue'
