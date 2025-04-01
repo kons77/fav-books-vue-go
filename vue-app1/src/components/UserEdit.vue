@@ -44,6 +44,7 @@
               v-model="user.password"
               type="password"              
               label="Pasword"
+              help="Leave empty to keep existing password"
               :value="user.password"
               name="password"></text-input>
 
@@ -60,7 +61,8 @@
               v-else
               v-model="user.confirm_password"
               type="password"              
-              label="Pasword"
+              label="Confirm Pasword"
+              help="Leave empty to keep existing password"
               :value="user.confirm_password"
               name="password"></text-input>
 
@@ -97,7 +99,20 @@ export default {
 
     if (parseInt(String(this.$route.params.userId), 10) > 0) {
       // edit an existing user
-      // TODO get user from db 
+      fetch(`${store.apiBaseURL}/admin/users/get/${this.$route.params.userId}`, Security.requestOptions(""))
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          notie.alert({
+            type: 'error',
+            text: data.message,
+          });          
+        } else {
+          this.user = data; // without an envelope 
+          // we want password to be empty for existint users 
+          this.user.password = "";
+        }
+      })
     } else {
       // add a new user 
     }
