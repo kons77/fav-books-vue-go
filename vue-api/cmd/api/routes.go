@@ -36,6 +36,7 @@ func (app *application) routes() http.Handler {
 		mux.Use(app.AuthTokenMiddleware)
 
 		mux.Post("/users", app.AllUsers)
+		mux.Post("/users/save", app.EditUser)
 
 	})
 

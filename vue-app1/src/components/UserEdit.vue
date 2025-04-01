@@ -4,7 +4,8 @@
         <div class="col">
           <h1 class="mt-3">User</h1>
           <hr>
-          <form-tag @UserEditEvent="submitHandler" name="userform" event="UserEditEvent">
+          <form-tag @userEditEvent="submitHandler" name="userform" event="userEditEvent">
+
             <text-input
               v-model="user.first_name"
               type="text"
@@ -13,7 +14,7 @@
               :value="user.first_name"
               name="first-name"></text-input>
             
-              <text-input
+            <text-input
               v-model="user.last_name"
               type="text"
               required="true"
@@ -21,7 +22,7 @@
               :value="user.last_name"
               name="last-name"></text-input>
             
-              <text-input
+            <text-input
               v-model="user.email"
               type="text"
               required="true"
@@ -34,7 +35,7 @@
               v-model="user.password"
               type="password"
               required="true"
-              label="Pasword"
+              label="Password"
               :value="user.password"
               name="password"></text-input>
 
@@ -48,20 +49,20 @@
 
             <text-input
               v-if="this.user.id ===0"
-              v-model="user.password"
+              v-model="user.confirm_password"
               type="password"
-              
-              label="Confirm Pasword"
-              :value="user.password"
-              name="confirm-password"></text-input>
+              required="true"
+              label="Password"
+              :value="user.confirm_password"
+              name="password"></text-input>
 
             <text-input
               v-else
-              v-model="user.password"
+              v-model="user.confirm_password"
               type="password"              
-              label="Confirm Pasword"
-              :value="user.password"
-              name="confirm-password"></text-input>
+              label="Pasword"
+              :value="user.confirm_password"
+              name="password"></text-input>
 
             <hr>
 
@@ -109,6 +110,7 @@ export default {
         last_name: "",
         email: "",
         password: "",
+        confirm_password: "",
       },
       store,
     }
@@ -120,11 +122,12 @@ export default {
   methods: {
     submitHandler() {
       const payload = {
-        id: parseInt(String(this.route.params.userId), 10),
+        id: parseInt(String(this.$route.params.userId), 10),
         first_name: this.user.first_name, 
         last_name: this.user.last_name, 
         email: this.user.email, 
         password: this.user.password, 
+        confirm_password: this.user.confirm_password, 
       }
 
       fetch(`${store.apiBaseURL}/admin/users/save`, Security.requestOptions(payload))
@@ -138,14 +141,14 @@ export default {
         } else {
           notie.alert({
             type: 'success',
-            tesxt: 'Changes saved!',
+            text: 'Changes saved!',
           })
         }
       })
       .catch((error) => {
         notie.alert({
           type: 'error',
-          text: response.message,
+          text: error.message,
         }) 
       })
     },
