@@ -61,19 +61,19 @@
       success(msg){
         notie.alert({
           type: 'success',
-          test: msg,
+          text: msg,
         })
       },
       error(msg) {
         notie.alert({
           type: 'error',
-          test: msg,
+          text: msg,
         })
       },
       warning(msg) {
         notie.alert({
           type: 'warning',
-          test: msg,
+          text: msg,
         })
       },
     },

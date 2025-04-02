@@ -89,7 +89,7 @@
 import Security from './security.js'
 import FormTag from './forms/FormTag.vue'
 import TextInput from './forms/TextInput.vue'
-//import router from '../router/index.js'
+import router from '../router/index.js'
 import { store } from './store.js'
 import notie from 'notie'
 
@@ -103,10 +103,7 @@ export default {
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
-          notie.alert({
-            type: 'error',
-            text: data.message,
-          });          
+          this.$emit('error', data.message);
         } else {
           this.user = data; // without an envelope 
           // we want password to be empty for existint users 
@@ -149,22 +146,14 @@ export default {
       .then(response => response.json())
       .then((data) => {
         if (data.error) {
-          notie.alert({
-            type: 'error',
-            text: data.message,
-          }) 
+          this.$emit('error', data.message);
         } else {
-          notie.alert({
-            type: 'success',
-            text: 'Changes saved!',
-          })
+          this.$emit('success', 'Changes saved!');
+          router.push("/admin/users");
         }
       })
       .catch((error) => {
-        notie.alert({
-          type: 'error',
-          text: error.message,
-        }) 
+        this.$emit('error', error);
       })
     },
     confirmDelete(id) {
@@ -172,7 +161,8 @@ export default {
         text: "Do you want to delete this user?",
         submitText: "Delete",
         //position: "bottom",
-        submitCallback: function() {
+        
+        submitCallback: () => {
           console.log("Will delete", id);
 
           let payload = {
@@ -183,20 +173,15 @@ export default {
           .then(response => response.json())
           .then((data) => {
             if (data.error) {
-              notie.alert({
-                type: 'error',
-                text: data.message,
-              })
+              this.$emit('error', data.message);
             } else {
-              notie.alert({
-                type: 'success',
-                text: 'User deleted',
-              })
+              this.$emit('success', 'User deleted');
+              router.push("/admin/users");
             }
           })
-
-
-
+          .catch((err) => {
+            
+          });
 
         }
       })
