@@ -2,7 +2,7 @@
   <Header />
 
   <div>
-    <router-view/>
+    <router-view @success="success" @error="error" @warning="warning" />
   </div>
   <Footer />
   
@@ -12,6 +12,7 @@
   import Header from "./components/Header.vue";
   import Footer from "./components/Footer.vue";
   import { store } from './components/store.js'
+  import notie from 'notie'
 
   const getCookie = (name) => {
     return document.cookie.split("; ").reduce((r, v) => {
@@ -55,7 +56,27 @@
     },
     mounted() {
       //fooBarTest();    
-    }
+    },
+    methods: {
+      success(msg){
+        notie.alert({
+          type: 'success',
+          test: msg,
+        })
+      },
+      error(msg) {
+        notie.alert({
+          type: 'error',
+          test: msg,
+        })
+      },
+      warning(msg) {
+        notie.alert({
+          type: 'warning',
+          test: msg,
+        })
+      },
+    },
   }
 
   function fooBarTest() {
