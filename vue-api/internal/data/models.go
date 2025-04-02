@@ -160,7 +160,7 @@ func (u *User) UpdateUser() error {
 	return nil
 }
 
-// DeleteUser deletes one user from the datbase, by ID
+// DeleteUser deletes one user from the datbase
 func (u *User) DeleteUser() error {
 	// you might want to put id  as an integer instead instead of calling it this way.
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
@@ -169,6 +169,22 @@ func (u *User) DeleteUser() error {
 	stmt := `delete from users where id = $1`
 
 	_, err := db.ExecContext(ctx, stmt, u.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// DeleteUser deletes one user from the datbase, by ID
+func (u *User) DeleteUserByID(id int) error {
+	// you might want to put id  as an integer instead instead of calling it this way.
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	stmt := `delete from users where id = $1`
+
+	_, err := db.ExecContext(ctx, stmt, id)
 	if err != nil {
 		return err
 	}

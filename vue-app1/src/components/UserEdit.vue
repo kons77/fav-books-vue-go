@@ -167,8 +167,39 @@ export default {
         }) 
       })
     },
-    confirmDelete() {
+    confirmDelete(id) {
+      notie.confirm({
+        text: "Do you want to delete this user?",
+        submitText: "Delete",
+        //position: "bottom",
+        submitCallback: function() {
+          console.log("Will delete", id);
 
+          let payload = {
+            id: id,
+          }
+
+          fetch(`${store.apiBaseURL}/admin/users/delete`, Security.requestOptions(payload))
+          .then(response => response.json())
+          .then((data) => {
+            if (data.error) {
+              notie.alert({
+                type: 'error',
+                text: data.message,
+              })
+            } else {
+              notie.alert({
+                type: 'success',
+                text: 'User deleted',
+              })
+            }
+          })
+
+
+
+
+        }
+      })
     }
 
 
