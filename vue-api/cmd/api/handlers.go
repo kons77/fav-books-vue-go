@@ -31,16 +31,12 @@ func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 
 	err := app.readJSON(w, r, &creds)
 	if err != nil {
-
 		app.errorLog.Println()
 		//app.errorJSON(w, err)
 		payload.Error = true
 		payload.Message = "invalid json supplied, or json missing entirely"
 		_ = app.writeJSON(w, http.StatusBadRequest, payload)
 	}
-
-	// TODO authenticate
-	app.infoLog.Println(creds.UserName, creds.Password)
 
 	// look up user by email
 	user, err := app.models.User.GetUserByEmail(creds.UserName)
@@ -53,6 +49,12 @@ func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 	validPassword, err := user.PasswordMatches(creds.Password)
 	if err != nil || !validPassword {
 		app.errorJSON(w, errors.New("invalid username/password"))
+		return
+	}
+
+	// make sure user is active
+	if user.Active == 0 {
+		app.errorJSON(w, errors.New("user is not active"))
 		return
 	}
 
@@ -156,6 +158,7 @@ func (app *application) EditUser(w http.ResponseWriter, r *http.Request) {
 		u.Email = user.Email
 		u.FirstName = user.FirstName
 		u.LastName = user.LastName
+		u.Active = user.Active
 
 		if err := u.UpdateUser(); err != nil {
 			app.errorJSON(w, err)
