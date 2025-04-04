@@ -95,6 +95,17 @@ export default {
           submitText: "Log Out",
           submitCallback: () => {
             console.log("would log out user id", id);
+
+            fetch(`${store.apiBaseURL}/admin/log-user-out/${id}`, Security.requestOptions(""))
+            .then(response => response.json())
+            .then((data) => {
+              if (data.error) {
+                this.$emit('error', data.message);
+              } else {
+                this.$emit('success', data.message);
+              }
+            })
+
           },
         })
       } else {
