@@ -2,7 +2,7 @@
   <Header />
 
   <div>
-    <router-view @success="success" @error="error" @warning="warning" />
+    <router-view :key="componentKey" @success="success" @error="error" @warning="warning" @forceUpdate="forceUpdate" />
   </div>
   <Footer />
   
@@ -34,7 +34,8 @@
     },
     data() {
       return {
-        store // Это не копия! Это ссылка на общий `store`
+        store, // Это не копия! Это ссылка на общий `store`
+        componentKey: 0,
       }
     }, 
     beforeMount() {
@@ -75,6 +76,9 @@
           type: 'warning',
           text: msg,
         })
+      },
+      forceUpdate() {
+        this.componentKey += 1;
       },
     },
   }
