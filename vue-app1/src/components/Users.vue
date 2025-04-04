@@ -11,6 +11,7 @@
           <tr>
             <th>User</th>
             <th>Email</th>
+            <th>Active</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -20,11 +21,19 @@
               <router-link :to="`/admin/users/${u.id}`">{{ u.last_name }}&nbsp;{{ u.first_name }} </router-link>
             </td>
             <td>{{ u.email }}</td>
+            
+            <td v-if="u.active === 1">
+              <span class="badge bg-success">Active</span>
+            </td>
+            <td v-else>
+              <span class="badge bg-secondary">Inactive</span>
+            </td>
+
             <td v-if="u.token.id > 0" >
               <span class="badge bg-success" @click="logUserOut(u.id)">Logged in</span>
             </td>
             <td v-else>
-              <span class="badge bg-danger">Not logged in</span>
+              <span class="badge bg-secondary">Not logged in</span>
             </td>
           </tr>
         </tbody>
@@ -86,7 +95,7 @@ export default {
           submitText: "Log Out",
           submitCallback: () => {
             console.log("would log out user id", id);
-          }
+          },
         })
       } else {
         this.$emit('error', "You can't log yourself out!");

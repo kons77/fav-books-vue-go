@@ -4,7 +4,7 @@
         <div class="col">
           <h1 class="mt-3">User</h1>
           <hr>
-          <form-tag @userEditEvent="submitHandler" name="userform" event="userEditEvent">
+          <form-tag v-if="this.ready" @userEditEvent="submitHandler" name="userform" event="userEditEvent">
 
             <text-input
               v-model="user.first_name"
@@ -66,6 +66,15 @@
               :value="user.confirm_password"
               name="password"></text-input>
 
+            <div class="form-check">
+              <input v-model="user.active" class="form-check-input" type="radio" id="user-active-1" :value="1">
+              <label class="form-check-label" for="user-active-1">Active</label>
+            </div>
+            <div class="form-check">
+              <input v-model="user.active" class="form-check-input" type="radio" id="user-active-2" :value="0">
+              <label class="form-check-label" for="user-active-2">Inactive</label>
+            </div>
+
             <hr>
 
             <div class="float-start">
@@ -79,6 +88,8 @@
             <div class="clearfix"></div>
 
           </form-tag>
+
+          <p v-else>Loading</p>
         </div>
       </div>
     </div>
@@ -106,12 +117,14 @@ export default {
           this.$emit('error', data.message);
         } else {
           this.user = data; // without an envelope 
+          this.ready = true;
           // we want password to be empty for existint users 
           this.user.password = "";
         }
       })
     } else {
       // add a new user 
+      this.ready = true;
     }
   }, 
   data() {
@@ -123,8 +136,10 @@ export default {
         email: "",
         password: "",
         confirm_password: "",
+        active: 0,
       },
       store,
+      ready: false,
     }
   },
   components: {
@@ -140,8 +155,10 @@ export default {
         email: this.user.email, 
         password: this.user.password, 
         confirm_password: this.user.confirm_password, 
+        active: this.user.active,
       }
 
+      
       fetch(`${store.apiBaseURL}/admin/users/save`, Security.requestOptions(payload))
       .then(response => response.json())
       .then((data) => {
@@ -155,6 +172,7 @@ export default {
       .catch((error) => {
         this.$emit('error', error);
       })
+      
     },
     confirmDelete(id) {
       notie.confirm({
