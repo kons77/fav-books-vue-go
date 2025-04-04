@@ -61,11 +61,9 @@ export default {
       if (response.error) {
         this.$emit('error', response.message);
       } else {
-        sleep(3000).then(()=> {
-          this.users = response.data.users;
-          this.ready = true;
-        });
-        
+        // sleep(3000).then(()=> { this.users .......  });
+        this.users = response.data.users;
+        this.ready = true;        
       }
     })
     .catch((error) => {
