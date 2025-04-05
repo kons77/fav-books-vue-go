@@ -1,4 +1,4 @@
-module vue-api
+module github.com/kons77/fav-books-api
 
 go 1.24.1
 

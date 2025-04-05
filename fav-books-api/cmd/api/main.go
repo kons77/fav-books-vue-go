@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"os"
 	"time"
-	"vue-api/internal/data"
-	"vue-api/internal/driver"
+
+	"github.com/kons77/fav-books-api/internal/data"
+	"github.com/kons77/fav-books-api/internal/driver"
 )
 
 // config is the type for all application configuration
@@ -37,6 +38,10 @@ func main() {
 
 	dsn := os.Getenv("DSN")
 	environment := os.Getenv("ENV")
+
+	if dsn == "" {
+		log.Fatal("DSN environment variable is not set")
+	}
 
 	db, err := driver.ConnectPosgres(dsn)
 	if err != nil {

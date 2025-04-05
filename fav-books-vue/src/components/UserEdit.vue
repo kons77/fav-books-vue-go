@@ -123,8 +123,9 @@ export default {
         }
       })
     } else {
-      // add a new user 
+      // add a new user       
       this.ready = true;
+      console.log("strike")
     }
   }, 
   data() {

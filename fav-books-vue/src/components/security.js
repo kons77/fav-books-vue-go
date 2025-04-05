@@ -1,5 +1,5 @@
 import { store } from './store.js'
-import router from './../router/index.js'
+import router from '../router/index.js'
 
 
 // this is going to be used only when I need to make a fetch request that requires authentication

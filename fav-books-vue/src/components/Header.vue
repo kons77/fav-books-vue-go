@@ -54,7 +54,7 @@
 
 <script>
 import { store } from './store.js';
-import router from './../router/index.js'
+import router from '../router/index.js'
 import Security from './security.js';
 
 export default {

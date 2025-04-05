@@ -5,7 +5,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	"vue-api/internal/data"
+
+	"github.com/kons77/fav-books-api/internal/data"
 
 	"github.com/go-chi/chi/v5"
 )
