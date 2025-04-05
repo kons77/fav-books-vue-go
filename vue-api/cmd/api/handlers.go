@@ -259,3 +259,26 @@ func (app *application) LogUserOutandSetInactive(w http.ResponseWriter, r *http.
 
 	_ = app.writeJSON(w, http.StatusOK, payload)
 }
+
+// check if token is valid
+func (app *application) ValidateToken(w http.ResponseWriter, r *http.Request) {
+	var requestPayload struct {
+		Token string `json:"token"`
+	}
+
+	err := app.readJSON(w, r, &requestPayload)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	valid := false
+	valid, _ = app.models.Token.ValidToken(requestPayload.Token) // no need to chek error cause false when error appears
+
+	payload := jsonResponse{
+		Error: false,
+		Data:  valid,
+	}
+
+	_ = app.writeJSON(w, http.StatusOK, payload)
+}

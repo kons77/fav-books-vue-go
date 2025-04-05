@@ -64,4 +64,9 @@ const routes = [
 ]
 
 const router = createRouter({history: createWebHistory(), routes})
+router.beforeEach(() => {
+    Security.checkToken();
+})
+
+
 export default router
