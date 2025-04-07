@@ -24,9 +24,10 @@
               <div v-for="b in this.books" :key="b.id">
                 <div class="card me-2 ms-1 mb-3" style="width: 10 rem;"
                   v-if="b.genre_ids.includes(currentFilter) || currentFilter === 0">
-                
-                  <img :src="`${this.imgPath}/covers/${b.slug}.jpg`" class="card-img-top" 
-                    :alt="`cover for ${b.title}`">
+                  <router-link :to="`/books/${b.slug}`">                
+                    <img :src="`${this.imgPath}/covers/${b.slug}.jpg`" class="card-img-top" 
+                      :alt="`cover for ${b.title}`">
+                  </router-link>
 
                   <div class="card-body text-center">
                     <h6 class="card-title">{{ b.title }}</h6>
