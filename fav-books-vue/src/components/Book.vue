@@ -58,7 +58,7 @@ export default{
     });
   },
   deactivated() {
-
+    this.ready = false;
   },
 }
 
