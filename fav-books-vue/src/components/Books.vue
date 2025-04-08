@@ -51,6 +51,7 @@
 import { store } from "./store.js";
 
 export default {
+  name: 'Books', // need for caching in the include section of keep-alive and the same name must be in router
   data() {
     return{
       store, 

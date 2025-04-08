@@ -25,6 +25,7 @@
 import { store } from "./store.js";
 
 export default{
+  name: 'Book',
   data() {
     return{
       book: {
@@ -37,11 +38,6 @@ export default{
     }
   },
   mounted() {
-    
-  },
-  //activated is actually fired any time a cached component is redisplayed and it is also called every time mounted is called
-  //but  you can only do it for components that are wrapped in some kind of keep alive
-  activated() {
     fetch(`${store.apiBaseURL}/books/${this.$route.params.bookName}`)
     .then(response => response.json())
     .then((data) => {
@@ -57,8 +53,13 @@ export default{
 
     });
   },
+  //activated is actually fired any time a cached component is redisplayed and it is also called every time mounted is called
+  //but  you can only do it for components that are wrapped in some kind of keep alive
+  activated() {
+    
+  },
   deactivated() {
-    this.ready = false;
+    //this.ready = false;
   },
 }
 

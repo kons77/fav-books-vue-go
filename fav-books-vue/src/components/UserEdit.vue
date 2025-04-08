@@ -105,6 +105,7 @@ import { store } from './store.js'
 //import notie from 'notie'
 
 export default {
+  name: 'UserEdit',
   beforeMount() {
     // Security.requireToken();
 

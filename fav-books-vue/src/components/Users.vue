@@ -63,6 +63,7 @@ And I'll do that and I'll leave it as an exercise for you to do on your own.
 */
 
 export default {
+  name: 'Users',
   data(){
     return {
       users: [],

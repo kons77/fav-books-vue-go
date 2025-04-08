@@ -40,7 +40,7 @@ import notie from 'notie';
 import Security from './security.js'
 
 export default{
-  name: 'login', 
+  name: 'Login', 
   components: {
     FormTag,
     TextInput,

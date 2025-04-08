@@ -31,18 +31,15 @@
 import { store } from './store.js'
 
 export default{
+  name:'BooksAdmin',
   data() {
     return{
-      book: {
-        //author: {},
-        //genres: [],
-      },
+      book: {},
       store,
-      imgPath: store.imgPath,
       ready: false,
     }
   },
-  activated() {
+  mounted() {
     fetch(`${store.apiBaseURL}/books`)
     .then(response => response.json())
     .then((data) => {
@@ -56,10 +53,7 @@ export default{
     .catch((error) => {
 
     });
-  },
-  deactivated() {
-    this.ready = false;
-  },
+  },  
 
 }
 </script>

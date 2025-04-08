@@ -23,7 +23,7 @@ const routes = [
     {path: '/books/:bookName',name: 'Book', component: Book },
     
     //secureRoute('/books/:bookName', 'Book', Book),
-    secureRoute('/admin/books/', 'Manage Books', BooksAdmin),
+    secureRoute('/admin/books/', 'BooksAdmin', BooksAdmin),
     secureRoute('/admin/books/:bookId', 'BookEdit', BookEdit),
     secureRoute('/admin/users', 'Users', Users),
     secureRoute('/admin/users/:userId', 'User', User),
