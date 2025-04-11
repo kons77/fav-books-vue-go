@@ -88,6 +88,31 @@ import notie from 'notie'
 
 export default {
   name: 'BookEdit', // need for caching in the include section of keep-alive and the same name must be in router
+  beforeMount() {
+    
+    // get book for edit if id > 0
+    if (this.$route.params.bookId > 0 ) {
+      // editing a book 
+    } else {
+      // adding a book 
+
+    }
+
+    // get list of authors for drop down
+    fetch(`${store.apiBaseURL}/admin/authors/all`, Security.requestOptions(""))
+    .then(response => response.json())
+    .then((data) => {
+      if (data.error) {
+        this.$emit('error', data.message)
+      } else {
+        this.authors = data.data;
+      }
+    })
+    .catch(error => {
+
+    });
+
+  }, 
   components: {
     'form-tag': FormTag,
     'text-input': TextInput,
