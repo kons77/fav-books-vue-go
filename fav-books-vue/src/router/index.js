@@ -31,6 +31,7 @@ const routes = [
 
 const router = createRouter({history: createWebHistory(), routes})
 
+// Token check on every route change (in the background, without redirect)
 router.beforeEach(() => {
     Security.checkToken();
 })
