@@ -1,15 +1,21 @@
 package main
 
 import (
+	"encoding/base64"
 	"errors"
+	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/kons77/fav-books-api/internal/data"
+	"github.com/mozillazg/go-slugify"
 
 	"github.com/go-chi/chi/v5"
 )
+
+var staticPath = "./static/" // for unite tests in the future
 
 // jsonResponse is the type used for generic JSON responses
 type jsonResponse struct {
@@ -343,6 +349,94 @@ func (app *application) AuthorsAll(w http.ResponseWriter, r *http.Request) {
 	payload := jsonResponse{
 		Error: false,
 		Data:  results,
+	}
+
+	app.writeJSON(w, http.StatusOK, payload)
+}
+
+func (app *application) EditBook(w http.ResponseWriter, r *http.Request) {
+	// can't use type Book cause of more fields
+	var requestPayload struct {
+		ID              int    `json:"id"`
+		Title           string `json:"title"`
+		AuthorID        int    `json:"author_id"`
+		PublicationYear int    `json:"publication_year"`
+		Description     string `json:"description"`
+		CoverBase64     string `json:"cover"`
+		GenreIDs        []int  `json:"genre_ids"`
+	}
+	err := app.readJSON(w, r, &requestPayload)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	book := data.Book{
+		ID:              requestPayload.ID,
+		Title:           requestPayload.Title,
+		AuthorID:        requestPayload.AuthorID,
+		PublicationYear: requestPayload.PublicationYear,
+		Description:     requestPayload.Description,
+		Slug:            slugify.Slugify(requestPayload.Title),
+		GenreIDs:        requestPayload.GenreIDs,
+	}
+
+	if len(requestPayload.CoverBase64) > 0 {
+		// we have a cover
+		decoved, err := base64.StdEncoding.DecodeString(requestPayload.CoverBase64)
+		if err != nil {
+			app.errorJSON(w, err)
+			return
+		}
+
+		// write image to /static/covers
+		if err := os.WriteFile(fmt.Sprintf("%s/covers/%s.jpg", staticPath, book.Slug), decoved, 0666); err != nil {
+			app.errorJSON(w, err)
+			return
+		}
+	}
+
+	if book.ID == 0 {
+		// adding a book
+		_, err := app.models.Book.Insert(book)
+		if err != nil {
+			app.errorJSON(w, err)
+			return
+		}
+	} else {
+		// updating a book
+		err := book.Update()
+		if err != nil {
+			app.errorJSON(w, err)
+			return
+		}
+	}
+
+	payload := jsonResponse{
+		Error:   false,
+		Message: "Changes Saved",
+	}
+
+	app.writeJSON(w, http.StatusAccepted, payload)
+}
+
+func (app *application) BookByID(w http.ResponseWriter, r *http.Request) {
+	bookID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	book, err := app.models.Book.GetOneById(bookID)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	payload := jsonResponse{
+		Error:   false,
+		Message: "",
+		Data:    book,
 	}
 
 	app.writeJSON(w, http.StatusOK, payload)

@@ -35,7 +35,7 @@
               
             <text-input
               v-model="book.publication_year"
-              type="text"
+              type="number"
               required="true"
               label="Publication year"
               :value="book.publication_year"
@@ -89,14 +89,30 @@ import notie from 'notie'
 export default {
   name: 'BookEdit', // need for caching in the include section of keep-alive and the same name must be in router
   beforeMount() {
-    
-    // get book for edit if id > 0
-    if (this.$route.params.bookId > 0 ) {
-      // editing a book 
-    } else {
-      // adding a book 
+    let bkID = this.$route.params.bookId;
+    //console.log(bkID);
 
-    }
+    // get book for edit if id > 0
+    if ( bkID > 0 ) {
+      // editing a book 
+      fetch(`${store.apiBaseURL}/admin/books/${bkID}`, Security.requestOptions(""))
+      .then(response => response.json())
+      .then((data) => {
+        if (data.error) {
+          this.$emit('error', data.message);
+        } else {
+          this.book = data.data;
+          let genreArray = [];
+          for (let i = 0; i< this.book.genres.length; i++) {
+            genreArray.push(this.book.genres[i].id)
+          }
+          this.book.genre_ids = genreArray;
+        }
+      })
+      .catch(error => {
+        this.$emit('error', error.message)
+      });
+    } 
 
     // get list of authors for drop down
     fetch(`${store.apiBaseURL}/admin/authors/all`, Security.requestOptions(""))
@@ -109,7 +125,7 @@ export default {
       }
     })
     .catch(error => {
-
+      this.$emit('error', error.message)
     });
 
   }, 
@@ -126,7 +142,7 @@ export default {
         id: 0,
         title: "",
         author_id: 0,
-        publication_year: 0,
+        publication_year: null,
         description: "",
         cover: "",
         slug: "",
@@ -154,14 +170,16 @@ export default {
         id: this.book.id, 
         title: this.book.title, 
         author_id: parseInt(this.book.author_id, 10), 
-        publication_year: this.book.publication_year,
-        description: publication_year.description,
+        publication_year: parseInt(this.book.publication_year, 10),
+        description: this.book.description,
         cover: this.book.cover,
         slug: this.book.slug,
         genre_ids: this.book.genre_ids,
       }
 
-      fetch(`${store.apiBaseURL}/adni/books/save`, Security.requestOptions(payload))
+      //console.log(payload);
+
+      fetch(`${store.apiBaseURL}/admin/books/save`, Security.requestOptions(payload))
       .then(response => response.json())
       .then((data) => {
         if (data.error) {
@@ -174,6 +192,9 @@ export default {
       .catch(error => {
         this.$emit('error', error);
       });
+
+
+
     },
     loadCoverImage() {
       // get a reference to the input using ref 
@@ -220,3 +241,9 @@ export default {
 
 }
 </script>
+
+<style scoped>
+.book-cover {
+  max-width: 10em;;
+}
+</style>

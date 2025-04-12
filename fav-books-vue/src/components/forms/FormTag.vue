@@ -22,8 +22,8 @@ export default{
 
       // standart bootstrap validation but simplified
       if (myForm.checkValidity()) {
-        console.log("My event name is", this.$props['event']);
-        console.log("Name", this.$props.name);
+        //console.log("My event name is", this.$props['event']);
+        //console.log("Name", this.$props.name);
         this.$emit(this.$props['event']); // emitting an event here instead of submitting the form
       }
       myForm.classList.add('was-validated');

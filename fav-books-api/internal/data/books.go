@@ -308,7 +308,7 @@ func (b *Book) Insert(book Book) (int, error) {
 		book.Title,
 		book.AuthorID,
 		book.PublicationYear,
-		slugify.Slugify(b.Title),
+		slugify.Slugify(book.Title),
 		book.Description,
 		time.Now(),
 		time.Now(),
@@ -319,19 +319,19 @@ func (b *Book) Insert(book Book) (int, error) {
 
 	//update genres using genre ids
 	if len(book.GenreIDs) > 0 {
-		stmt = `delete from books_genres where book_id= $1`
+		stmt = `delete from books_genres where book_id = $1`
 		_, err := db.ExecContext(ctx, stmt, book.ID)
 		if err != nil {
-			return newID, fmt.Errorf(`book updated, but genres not: %s`, err.Error())
+			return newID, fmt.Errorf(`book updated, but genres not (while deleting genres): %s`, err.Error())
 		}
 
 		//add new genres
 		for _, x := range book.GenreIDs {
-			stmt = `insert into book_genres (book_id, genre_id, created_at, updated_at) 
+			stmt = `insert into books_genres (book_id, genre_id, created_at, updated_at) 
 				values ($1, $2, $3, $4)`
 			_, err = db.ExecContext(ctx, stmt, newID, x, time.Now(), time.Now())
 			if err != nil {
-				return newID, fmt.Errorf(`book updated, but genres not: %s`, err.Error())
+				return newID, fmt.Errorf(`book updated, but genres not (while inserting genres): %s`, err.Error())
 			}
 		}
 	}
@@ -368,7 +368,7 @@ func (b *Book) Update() error {
 	// update genres using genre ids
 	if len(b.GenreIDs) > 0 {
 		// delete existing genres
-		stmt = `delete from genres where book_id = $1`
+		stmt = `delete from books_genres where book_id = $1`
 		_, err := db.ExecContext(ctx, stmt, b.ID)
 		if err != nil {
 			return fmt.Errorf("book updated, but genres not: %s", err.Error())

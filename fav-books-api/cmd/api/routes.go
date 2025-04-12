@@ -50,6 +50,8 @@ func (app *application) routes() http.Handler {
 
 		// admin book routes
 		mux.Post("/authors/all", app.AuthorsAll)
+		mux.Post("/books/save", app.EditBook)
+		mux.Post("/books/{id}", app.BookByID)
 
 	})
 
