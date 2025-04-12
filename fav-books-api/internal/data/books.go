@@ -398,6 +398,7 @@ func (b *Book) DeleteByID(id int) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
