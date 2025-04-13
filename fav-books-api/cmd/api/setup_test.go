@@ -1,5 +1,13 @@
 package main
 
+/* Data-Dog sql mock vs docker database
+Hi Trevor, I saw in other courses of yours that you use a docker db for the test database,
+it does have a bit more of a setup but I'm guessing it stays true to the original db behavior.
+This method does look a lot faster to setup.
+
+Trevor: I always use Docker during development now.
+*/
+
 import (
 	"log"
 	"os"
