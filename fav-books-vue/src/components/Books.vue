@@ -22,7 +22,7 @@
             <transition-group class="p-3 d-flex flex-wrap" tag="div" appear name="books">
 
               <div v-for="b in this.books" :key="b.id">
-                <div class="card me-2 ms-1 mb-3" style="width: 10 rem;"
+                <div class="card me-2 ms-1 mb-3" style="width: 10rem;"
                   v-if="b.genre_ids.includes(currentFilter) || currentFilter === 0">
                   <router-link :to="`/books/${b.slug}`">                
                     <img :src="`${this.imgPath}/covers/${b.slug}.jpg`" class="card-img-top" 
