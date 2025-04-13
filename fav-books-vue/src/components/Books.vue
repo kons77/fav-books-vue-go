@@ -66,7 +66,7 @@ export default {
     fetch(`${store.apiBaseURL}/books`)
     .then(response => response.json())
     .then((response) => {
-      if (this.error) {
+      if (response.error) {
         this.$emit('error', response.message);
       } else {
         this.books = response.data.books;
