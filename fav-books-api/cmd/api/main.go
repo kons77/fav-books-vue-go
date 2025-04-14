@@ -31,7 +31,7 @@ type application struct {
 // main is the main entry point four our application
 func main() {
 	var cfg config
-	cfg.port = 8082
+	cfg.port = 8081
 
 	infoLog := log.New(os.Stdout, "INFO \t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stdout, "ERROR \t", log.Ldate|log.Ltime|log.Lshortfile)
