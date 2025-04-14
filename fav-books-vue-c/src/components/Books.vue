@@ -62,7 +62,7 @@ import { store } from "./store.js";
 
 export default {
   name: 'Books',
-  emit: ['error'],
+  emits: ['error'],
   props: {},
 
   setup(props, ctx) {

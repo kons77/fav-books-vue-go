@@ -7,7 +7,7 @@
         <form-tag @myevent="submitHandler" name="myform" event="myevent">
 
           <text-input
-            v-model="email"
+            v-model="mail"
             label="Email"
             name="email"
             type="email"
@@ -32,32 +32,42 @@
 </template>
 
 <script>
+import {ref, onMounted} from 'vue'
+//import {useRouter} from 'vue-router'
+import router from '../router/index.js'
+import { store } from './store.js'
+import Security from './security.js'
+import notie from 'notie'
+
 import FormTag from './forms/FormTag.vue'
 import TextInput from './forms/TextInput.vue'
-import { store } from './store.js'
-import router from '../router/index.js'
-import notie from 'notie';
-import Security from './security.js'
 
-export default{
+
+export default { 
   name: 'Login', 
+  emits: ['error'],
+  props: {},
+  // declare components here  to use the the lowercase syntax with the hyphens
+  // otherwise I could just use the component names as they exist
   components: {
-    FormTag,
-    TextInput,
+    'form-tag': FormTag,
+    'text-input': TextInput,
   },
-  data()  {
-    return {
-      email: "",
-      password: "",
-      store,
-    }
-  },
-  methods: {
-    submitHandler() {
+
+  setup(props, ctx) {
+    //const router = useRouter();
+    let mail = ref("");
+    let password = ref(""); 
+
+    onMounted(() => {
+      //console.log("using new component");
+    })
+
+    function submitHandler() {
 
       const payload = {
-        email: this.email,
-        password: this.password,
+        email: mail.value,
+        password: password.value,
       }
 
       //! show error if cannot connected to db 
@@ -65,7 +75,7 @@ export default{
       .then(response => response.json())
       .then((response) => {
         if (response.error) {
-          this.$emit('error', response.message)
+          ctx.emit('error', response.message)
         } else {
           store.token = response.data.token.token;
           
@@ -93,6 +103,14 @@ export default{
         }
       })
     }
-  },
+
+    return {
+      submitHandler, 
+      mail, password, 
+    }
+
+  }
 }
+
+
 </script>

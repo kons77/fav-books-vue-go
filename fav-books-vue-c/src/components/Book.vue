@@ -29,7 +29,7 @@ import {store} from './store.js'
 
 export default {
   name: "Book",
-  emit: ['error'],
+  emits: ['error'],
   props: {},
 
   setup(props, ctx) {
