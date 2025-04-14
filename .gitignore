@@ -1,5 +1,6 @@
 **\db-data
 **\.env
+**\.env*
 **\Makefile
 vueapi.exe
 Makefile
