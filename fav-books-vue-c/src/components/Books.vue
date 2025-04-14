@@ -62,7 +62,7 @@ import { store } from "./store.js";
 
 export default {
   name: 'Books',
-  emits: ['error'],
+  emits: ['error'], // emits is an option where you declare the events that the component can emit to the parent.
   props: {},
 
   setup(props, ctx) {
