@@ -1,7 +1,7 @@
 <template>
     <form 
       @submit.prevent="submit"
-      :ref="formRef"
+      ref="formRef"
       :event="event"
       autocomplete="off" 
       :method="method" 
@@ -39,7 +39,6 @@
     }
     formRef.value.classList.add('was-validated');
   }
-
 
 
 
