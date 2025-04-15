@@ -1,3 +1,4 @@
+<!-- converted to the Composition API -->
 <template>
   <div class="container">
     <div class="row">

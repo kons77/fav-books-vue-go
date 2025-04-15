@@ -1,3 +1,4 @@
+<!-- converted to the Composition API -->
 <template>
     <form 
       @submit.prevent="submit"

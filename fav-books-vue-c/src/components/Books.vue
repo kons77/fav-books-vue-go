@@ -1,7 +1,8 @@
+<!-- converted to the Composition API -->
+
 <template>
 
   <!-- we must remove all references to this -->
-
   <div class="container">
     <div class="row">
       <div class="col">
