@@ -14,14 +14,13 @@
 </template>
 
 
-<script>
-  export default {
-    name: 'FormTag'  // in Vue 3 with <script setup>, the component name is automatically inferred from the file name
-  }
-</script>
-
 <script setup>
   import { ref } from 'vue';
+
+  // in Vue 3 with <script setup>, the component name is automatically inferred from the file name
+  // the name field can be omitted, or optionally declared using:
+  //  script  export default { name: 'FormTag' } /script 
+
 
   const props = defineProps({
     method: String, 
@@ -40,7 +39,5 @@
     }
     formRef.value.classList.add('was-validated');
   }
-
-
 
 </script>

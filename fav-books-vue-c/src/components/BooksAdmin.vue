@@ -1,3 +1,4 @@
+<!-- converted to the Composition API -->
 <template>
     <div class="container">
       <div class="row">
@@ -5,7 +6,7 @@
           <h1 class="mt-3">Manage Books</h1>
           <hr>
 
-          <table v-if="this.ready" class="table table-striped table-compact">
+          <table v-if="ready" class="table table-striped table-compact">
             <thead>
               <tr>
                 <th>Book</th>
@@ -13,7 +14,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="b in this.books" v-bind:key="b.id">
+              <tr v-for="b in books" v-bind:key="b.id">
                 <td>
                   <router-link :to="`/admin/books/${b.id}`">{{ b.title }}</router-link>
                 </td>
@@ -27,33 +28,51 @@
   </template>
 
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import { store } from './store.js'
 
-export default{
-  name:'BooksAdmin',
-  data() {
-    return{
-      book: {},
-      store,
-      ready: false,
-    }
-  },
-  mounted() {
-    fetch(`${store.apiBaseURL}/books`)
+let ready = ref(false);
+let books = ref({}) // ref([]) ?? 
+let book = ref({}) 
+
+// const props = defineProps({})
+
+const emit = defineEmits(['error'])
+
+defineOptions({
+  name: 'BooksAdmin'
+});
+
+
+onMounted(async() => {
+  try {
+    const response = await fetch(`${store.apiBaseURL}/books`);
+    const data = await response.json();
+    books.value = data.data.books; 
+    ready.value = true;
+  } catch(error) {
+    emit('error', error.message || error )
+  }
+});
+
+/*
+onMounted(() => {
+  fetch(`${store.apiBaseURL}/books`)
     .then(response => response.json())
     .then((data) => {
       if (data.error) {
-        this.$emit('error', data.message)
+        emit('error', data.message)
       } else {
-        this.books = data.data.books;
-        this.ready = true;
+        books.value = data.data.books;
+        ready.value = true;
       }
     })
     .catch((error) => {
-
+      emit('error', error.message || error )
     });
-  },  
+})
+*/
 
-}
 </script>
+
