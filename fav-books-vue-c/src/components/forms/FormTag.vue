@@ -16,7 +16,7 @@
 
 <script>
   export default {
-    name: 'FormTag'
+    name: 'FormTag'  // in Vue 3 with <script setup>, the component name is automatically inferred from the file name
   }
 </script>
 

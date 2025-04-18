@@ -1,3 +1,4 @@
+<!-- converted to the Composition API -->
 <template>
   <div class="mb-3">
     <label :for="name" class="form-label">{{label}}</label>
@@ -10,25 +11,28 @@
         :max="max"
         :value="modelValue"
         :autocomplete="name + '-new'"
-        @input="$emit('update:modelValue', $event.target.value)"
+        @input="emit('update:modelValue', $event.target.value)"
         class="form-control">
-      <div class="form-text">{{help}}</div>
+      <div v-if="help" class="form-text">{{help}}</div>
   </div>
 </template>
 
-<script>
-export default{
-  name: 'TextInput',
-  props: {
-        name: String,
-        type: String,
-        label: String,
-        placeholder: String,
-        required: String,
-        min: String,
-        max: String,
-        modelValue: String,
-        help: String,
-    },
-}
+
+
+<script setup> 
+  // export default{ name: 'TextInput', }
+
+  const props = defineProps({
+    name: String,
+    type: String,
+    label: String,
+    placeholder: String,
+    required: Boolean,
+    min: Number,
+    max: Number,
+    modelValue: String,
+    help: String,
+  })
+
+  const emit = defineEmits(['update:modelValue'])
 </script>
