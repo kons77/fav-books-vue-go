@@ -6,7 +6,7 @@ services:
   postgres_favbooks:
     image: 'postgres:14.0'
     ports:
-      - "5432:5432"
+      - "5437:5432"
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -15,10 +15,5 @@ services:
     volumes:
       - ./db-data/postgres/:/var/lib/postgresql/data/
 
-  #  start mailhog
-  mailhog:
-    image: 'mailhog/mailhog:latest'
-    ports:
-      - "1025:1025"
-      - "8025:8025"
-    restart: always
+  # start mailhog
+  # already running from another directory on this server 
