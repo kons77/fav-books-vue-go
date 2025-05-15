@@ -3,6 +3,7 @@
     <form 
       @submit.prevent="submit"
       ref="formRef"
+      :name="name"
       :event="event"
       autocomplete="off" 
       :method="method" 
